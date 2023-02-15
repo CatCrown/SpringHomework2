@@ -1,2 +1,5 @@
-package com.sparta.springhomework2.entity;public class UserRoleEnum {
+package com.sparta.springhomework2.entity;
+
+public enum UserRoleEnum {
+    USER, ADMIN
 }
