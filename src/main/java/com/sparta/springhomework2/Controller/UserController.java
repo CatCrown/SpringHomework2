@@ -2,14 +2,14 @@ package com.sparta.springhomework2.Controller;
 
 import com.sparta.springhomework2.dto.LoginRequestDto;
 import com.sparta.springhomework2.dto.SignupRequestDto;
+import com.sparta.springhomework2.dto.StatusResponseDto;
 import com.sparta.springhomework2.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-@Controller
+
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class UserController {
@@ -25,19 +25,17 @@ public class UserController {
 //        return new ModelAndView("login");
 //    }
 
+    @ResponseBody
     @PostMapping("/signup")
-    public String signup(SignupRequestDto signupRequestDto) {
-        userService.signup(signupRequestDto);
-        return "redirect:/api/auth/login";
+    public StatusResponseDto<String> signup(@Valid @RequestBody SignupRequestDto signupRequestDto) {
+        return userService.signup(signupRequestDto);
     }
+
 
     @ResponseBody
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        userService.login(loginRequestDto, response);
-        return "success";
+    public StatusResponseDto<String> login(@RequestBody LoginRequestDto loginRequestDto) {
+        return userService.login(loginRequestDto);
     }
-
-
 
 }

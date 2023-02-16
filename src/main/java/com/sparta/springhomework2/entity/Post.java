@@ -2,6 +2,7 @@ package com.sparta.springhomework2.entity;
 
 import com.sparta.springhomework2.dto.PostRequestDto;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,26 +18,20 @@ public class Post extends Timestamped {
     private String title;
 
     @Column(nullable = false)
-    private String username;
-
-    @Column(nullable = false)
     private String contents;
 
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public Post(PostRequestDto requestDto, Long userId){
+    @Builder
+    public Post(PostRequestDto requestDto, User user){
         this.title = requestDto.getTitle();
-        this.username = requestDto.getUsername();
         this.contents = requestDto.getContents();
-        this.userId = userId;
+        this.user = user;
     }
     public void update(PostRequestDto requestDto){
         this.title = requestDto.getTitle();
-        this.username = requestDto.getUsername();
         this.contents = requestDto.getContents();
     }
-
-
-
 }
