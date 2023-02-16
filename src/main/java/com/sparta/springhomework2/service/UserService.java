@@ -22,19 +22,18 @@ public class UserService {
 //    private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
     @Transactional
     public StatusResponseDto<String> signup(SignupRequestDto signupRequestDto) {
-        String username = signupRequestDto.getUsername();
-        String password = signupRequestDto.getPassword();
+//        String username = signupRequestDto.getUsername();
+//        String password = signupRequestDto.getPassword();
 
 
             // 회원 중복 확인
-        Optional<User> found = userRepository.findByUsername(username);
+        Optional<User> found = userRepository.findByUsername(signupRequestDto.getUsername());
         if (found.isPresent()) {//중복체크
             throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
         }
         //사용자 등록
-        User user = User.builder()
-                .requestDto(signupRequestDto)
-                .build();
+//        User user = User.builder().requestDto(signupRequestDto).build();
+        User user = User.builder().requestDto(signupRequestDto).build();
         userRepository.save(user);
         return StatusResponseDto.success("회원가입성공");
     }

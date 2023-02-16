@@ -39,7 +39,5 @@ public class User {
         this.password = requestDto.getPassword();
         role = requestDto.isAdminCheck() ? UserRoleEnum.ADMIN : UserRoleEnum.USER;
     }
-    //  도경님은 requestDto.isAdminCheck() ?  로 되어 있는데 왜 안될까?
-
 
 }
