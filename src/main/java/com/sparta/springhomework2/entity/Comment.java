@@ -2,6 +2,7 @@ package com.sparta.springhomework2.entity;
 
 import com.sparta.springhomework2.dto.CommentRequestDto;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +16,9 @@ public class Comment extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String contents;
+
+    @Column
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -25,13 +28,14 @@ public class Comment extends Timestamped{
     @JoinColumn(name = "post_id")
     private Post post;
 
-    public Comment(String contents, User user, Post post) {
-        this.contents = contents;
+    @Builder
+    public Comment(CommentRequestDto requestDto ,User user, Post post ) {
         this.user = user;
         this.post = post;
+        this.content = requestDto.getContent();
     }
 
     public void update(CommentRequestDto requestDto){
-        this.contents = requestDto.getContent();
+        this.content = requestDto.getContent();
     }
 }

@@ -1,10 +1,10 @@
 package com.sparta.springhomework2.repository;
-
 import com.sparta.springhomework2.entity.Comment;
+import com.sparta.springhomework2.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import java.util.*;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-//    List<Comment>findAllByPostId(Long id);
+    Optional<Comment> findByIdAndPostId(Long id, Long postId);
 }

@@ -2,6 +2,7 @@ package com.sparta.springhomework2.service;
 
 import com.sparta.springhomework2.dto.CommentRequestDto;
 import com.sparta.springhomework2.dto.CommentResponseDto;
+import com.sparta.springhomework2.dto.PostResponseDto;
 import com.sparta.springhomework2.dto.StatusResponseDto;
 import com.sparta.springhomework2.entity.Comment;
 import com.sparta.springhomework2.entity.Post;
@@ -25,9 +26,9 @@ public class CommentService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
-//    private final Gson gson;
 
-    public StatusResponseDto<CommentResponseDto> createComment(Long id, String content, HttpServletRequest request){
+    @Transactional
+    public StatusResponseDto<CommentResponseDto> createComment(Long id, CommentRequestDto requestDto, HttpServletRequest request){
         String token = jwtUtil.resolveToken(request);
         Claims claims;
         if (token != null) {
@@ -35,9 +36,10 @@ public class CommentService {
                 claims = jwtUtil.getUserInfoFromToken(token);
                 Post post = postRepository.findById(id).orElseThrow(
                         () -> new NullPointerException("등록되지 않은 게시글입니다."));
-                User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(() -> new IllegalArgumentException("사용자 정보를 찾을 수 없습니다. "));
-                Comment comment = new Comment(content, user, post);
-                commentRepository.save(comment);
+                User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                        () -> new IllegalArgumentException("사용자 정보를 찾을 수 없습니다. "));
+                Comment comment = commentRepository.save(new Comment(requestDto, user, post));
+
                 return StatusResponseDto.success(new CommentResponseDto(comment));
             }
         }
@@ -51,9 +53,15 @@ public class CommentService {
         if (token != null) {
             if (jwtUtil.validateToken(token)) {
                 claims = jwtUtil.getUserInfoFromToken(token);
-                User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(()-> new IllegalArgumentException("사용자 정보를 찾을 수 없다. "));
-                Comment comment= commentRepository.findById(id).orElseThrow(
-                        ()-> new NullPointerException("해당 댓글을 찾을 수 없습니다."));
+
+                Post post = postRepository.findById(id).orElseThrow(
+                        () -> new NullPointerException("등록되지 않은 게시글입니다."));
+
+                User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                        ()-> new IllegalArgumentException("사용자 정보를 찾을 수 없다. "));
+
+                Comment comment= commentRepository.findByIdAndPostId(id, post.getId()).orElseThrow(
+                        ()-> new IllegalArgumentException("해당 댓글을 찾을 수 없습니다."));
 
                 if (user.getRole() == UserRoleEnum.ADMIN || user.getUsername().equals(comment.getUser().getUsername())){
                     comment.update(commentRequestDto);
@@ -72,8 +80,16 @@ public class CommentService {
         if (token != null){
             if (jwtUtil.validateToken(token)){
                 claims = jwtUtil.getUserInfoFromToken(token);
-                User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(()-> new IllegalArgumentException("사용자 정보를 찾을 수 없다. "));
-                Comment comment= commentRepository.findById(id).orElseThrow(()-> new NullPointerException("해당 댓글을 찾을 수 없습니다."));
+
+                User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                        ()-> new IllegalArgumentException("사용자 정보를 찾을 수 없다. "));
+                Post post = postRepository.findByIdAndUserId(id,user.getId()).orElseThrow(
+                        ()-> new IllegalArgumentException("해당 게시글은 존재하지 않습니다.")
+                );
+
+                Comment comment= commentRepository.findByIdAndPostId(id, post.getId()).orElseThrow(
+                        ()-> new NullPointerException("해당 댓글을 찾을 수 없습니다."));
+
                 if (user.getRole() == UserRoleEnum.ADMIN || user.getUsername().equals(comment.getUser().getUsername())){
                     commentRepository.deleteById(id);
                     return StatusResponseDto.success("delete success!");
@@ -83,5 +99,12 @@ public class CommentService {
             }
         }
         throw  new IllegalArgumentException("토큰이 유효하지 않습니다.");
+    }
+    @Transactional
+    public StatusResponseDto<CommentResponseDto> findComment(Long id) {
+        CommentResponseDto commentResponseDto = new CommentResponseDto(commentRepository.findById(id).orElseThrow(
+                ()-> new IllegalArgumentException("아이디가 존재하지 않습니다")
+        ));
+        return StatusResponseDto.success(commentResponseDto);
     }
 }

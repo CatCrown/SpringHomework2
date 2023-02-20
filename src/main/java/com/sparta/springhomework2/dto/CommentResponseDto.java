@@ -19,21 +19,22 @@ public class CommentResponseDto {
     private LocalDateTime modifiedAt;
 
 
+    @Builder
     public CommentResponseDto(Comment comment){
         this.id = comment.getId();
-        this.content = comment.getContents();
+        this.content = comment.getContent();
         this.username = comment.getUser().getUsername();
         this.createdAt = comment.getCreatedAt();
         this.modifiedAt = comment.getModifiedAt();
     }
 
-    public static CommentResponseDto from(Comment comment){
-        return CommentResponseDto.builder()
-                .id(comment.getId())
-                .content(comment.getContents())
-                .username(comment.getUser().getUsername())
-                .createdAt(comment.getCreatedAt())
-                .modifiedAt(comment.getModifiedAt())
-                .build();
-    }
+//    public static CommentResponseDto from(Comment comment){
+//        return CommentResponseDto.builder()
+//                .id(comment.getId())
+//                .content(comment.getContent())
+//                .username(comment.getUser().getUsername())
+//                .createdAt(comment.getCreatedAt())
+//                .modifiedAt(comment.getModifiedAt())
+//                .build();
+//    }
 }

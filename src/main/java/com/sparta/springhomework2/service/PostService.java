@@ -7,6 +7,7 @@ import com.sparta.springhomework2.entity.Post;
 import com.sparta.springhomework2.entity.User;
 import com.sparta.springhomework2.entity.UserRoleEnum;
 import com.sparta.springhomework2.jwt.JwtUtil;
+import com.sparta.springhomework2.repository.CommentRepository;
 import com.sparta.springhomework2.repository.PostRepository;
 import com.sparta.springhomework2.repository.UserRepository;
 import com.sun.net.httpserver.Authenticator;
@@ -24,6 +25,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     //전체 조회
     @Transactional(readOnly = true)
