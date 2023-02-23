@@ -12,6 +12,7 @@ import com.sparta.springhomework2.jwt.JwtUtil;
 import com.sparta.springhomework2.repository.CommentRepository;
 import com.sparta.springhomework2.repository.PostRepository;
 import com.sparta.springhomework2.repository.UserRepository;
+import com.sparta.springhomework2.security.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,9 @@ public class CommentService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public StatusResponseDto<CommentResponseDto> createComment(Long id, CommentRequestDto requestDto, User user) {
+    public StatusResponseDto<CommentResponseDto> createComment(Long id, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
+                        () -> new IllegalArgumentException("사용자 정보를 찾을 수 없습니다. "));
         Post post = postRepository.findById(id).orElseThrow(
             () -> new NullPointerException("등록되지 않은 게시글입니다."));
         Comment comment = commentRepository.save(new Comment(requestDto, user, post));
@@ -65,9 +68,12 @@ public class CommentService {
     }
 
     @Transactional
-    public StatusResponseDto<CommentResponseDto> updateComment(Long id, CommentRequestDto commentRequestDto, User user) {
-        Post post = postRepository.findById(id).orElseThrow(
-            () -> new NullPointerException("등록되지 않은 게시글입니다."));
+    public StatusResponseDto<CommentResponseDto> updateComment(Long id, CommentRequestDto commentRequestDto, UserDetailsImpl userDetails) {
+
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("사용자 정보를 찾을 수 없습니다. "));
+        Post post = postRepository.findByIdAndUserId(id,userDetails.getUser().getId()).orElseThrow(
+                () -> new NullPointerException("등록되지 않은 게시글입니다."));
 
         Comment comment= commentRepository.findByIdAndPostId(id, post.getId()).orElseThrow(
             ()-> new IllegalArgumentException("해당 댓글을 찾을 수 없습니다."));
@@ -109,10 +115,12 @@ public class CommentService {
 //
 
     @Transactional
-    public StatusResponseDto<String> deleteComment(Long id, User user) {
-        Post post = postRepository.findByIdAndUserId(id,user.getId()).orElseThrow(
+    public StatusResponseDto<String> deleteComment(Long id, UserDetailsImpl userDetails) {
+        Post post = postRepository.findByIdAndUserId(id,userDetails.getUser().getId()).orElseThrow(
                 ()-> new IllegalArgumentException("해당 게시글은 존재하지 않습니다.")
         );
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("사용자 정보를 찾을 수 없습니다. "));
 
         Comment comment= commentRepository.findByIdAndPostId(id, post.getId()).orElseThrow(
                 ()-> new NullPointerException("해당 댓글을 찾을 수 없습니다."));

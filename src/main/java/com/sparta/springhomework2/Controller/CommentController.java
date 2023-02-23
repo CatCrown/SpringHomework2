@@ -24,7 +24,7 @@ public class CommentController {
     public StatusResponseDto<CommentResponseDto> createComment(@PathVariable Long id,
                                                                @RequestBody CommentRequestDto requestDto,
                                                                @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return commentService.createComment(id, requestDto, userDetails.getUser());
+        return commentService.createComment(id, requestDto, userDetails);
     }
     // 조회
     @GetMapping("/comment/{id}")
@@ -37,14 +37,14 @@ public class CommentController {
     public StatusResponseDto<CommentResponseDto> updateComment(@PathVariable Long id,
                                                                @RequestBody CommentRequestDto commentRequestDto,
                                                                @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return commentService.updateComment(id, commentRequestDto, userDetails.getUser());
+        return commentService.updateComment(id, commentRequestDto, userDetails);
     }
 
     //삭제
     @DeleteMapping("/comment/{id}")
     public StatusResponseDto<String> deleteComment(@PathVariable Long id,
                                                    @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return commentService.deleteComment(id, userDetails.getUser());
+        return commentService.deleteComment(id, userDetails);
     }
 
 }
