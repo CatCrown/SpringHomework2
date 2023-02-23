@@ -1,7 +1,7 @@
 package com.sparta.springhomework2.entity;
 
 import com.sparta.springhomework2.dto.PostRequestDto;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +30,11 @@ public class Post extends Timestamped {
         this.contents = requestDto.getContents();
         this.user = user;
     }
+
+    public Post(PostRequestDto requestDto, Long id) {
+        super();
+    }
+
     public void update(PostRequestDto requestDto){
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();

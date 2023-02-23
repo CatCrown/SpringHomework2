@@ -7,7 +7,7 @@ import com.sparta.springhomework2.entity.User;
 import com.sparta.springhomework2.entity.UserRoleEnum;
 import com.sparta.springhomework2.jwt.JwtUtil;
 import com.sparta.springhomework2.repository.UserRepository;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

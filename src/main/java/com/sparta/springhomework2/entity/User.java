@@ -2,7 +2,7 @@ package com.sparta.springhomework2.entity;
 
 import com.sparta.springhomework2.dto.PostRequestDto;
 import com.sparta.springhomework2.dto.SignupRequestDto;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,11 +27,11 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-//    public User(String username, String password, UserRoleEnum role) {
-//        this.username = username;
-//        this.password = password;
-//        this.role = role;
-//    }
+    public User(String username, String password, UserRoleEnum role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
 
     @Builder
     public User(SignupRequestDto requestDto){

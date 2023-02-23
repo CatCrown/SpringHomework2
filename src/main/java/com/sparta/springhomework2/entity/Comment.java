@@ -1,12 +1,10 @@
 package com.sparta.springhomework2.entity;
 
 import com.sparta.springhomework2.dto.CommentRequestDto;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.swing.text.AbstractDocument;
 
 @Entity
 @Getter
@@ -28,6 +26,9 @@ public class Comment extends Timestamped{
     @JoinColumn(name = "post_id")
     private Post post;
 
+//    @OneToMany(mappedBy = "comment",fetch = FetchType.LAZY)
+//    List<CommentLike> commentLikes = new ArrayList<>();
+
     @Builder
     public Comment(CommentRequestDto requestDto ,User user, Post post ) {
         this.user = user;
@@ -39,3 +40,14 @@ public class Comment extends Timestamped{
         this.content = requestDto.getContent();
     }
 }
+
+
+
+
+
+
+
+
+
+
+

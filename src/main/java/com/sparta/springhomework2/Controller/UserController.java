@@ -4,9 +4,10 @@ import com.sparta.springhomework2.dto.LoginRequestDto;
 import com.sparta.springhomework2.dto.SignupRequestDto;
 import com.sparta.springhomework2.dto.StatusResponseDto;
 import com.sparta.springhomework2.service.UserService;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 
 @RestController

@@ -14,7 +14,7 @@ public class PostResponseDto extends Timestamped {
     private Long id;
     private String title;//제목
     private String contents; // 작성내용
-    private String username;
+    private String username; // 작성자명
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
